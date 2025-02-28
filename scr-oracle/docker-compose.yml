@@ -1,0 +1,24 @@
+services:
+  oracle:
+    build: ./oracle
+    container_name: oracle
+    ports:
+      - 1521:1521
+      - 5500:5500
+    healthcheck:
+      test: [ "CMD", "/opt/oracle/checkDBStatus.sh"]
+      interval: 2s
+
+  scr:
+    environment:
+      - SAS_SCR_LOG_LEVEL_SCR_CONFIG=TRACE
+      - SAS_SCR_LOG_LEVEL_SCR_MODULE_LOGGER=TRACE
+      - SAS_SCR_LOG_LEVEL_App=TRACE
+      - SAS_SCR_LOG_LEVEL_Audit=TRACE
+    build: ./scr
+    container_name: scr-oracle
+    ports:
+      - 8083:8080
+    depends_on:
+      oracle:
+        condition: service_healthy

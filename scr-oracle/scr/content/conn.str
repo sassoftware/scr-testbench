@@ -1,0 +1,1 @@
+connectionstring=driver=sql;conopts=((driver=oracle;catalog=ora01;uid=scott;pwd='{SAS002}F77E0C345A42C6A753443DCE';path=oracle:1521/FREEPDB1);)

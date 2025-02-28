@@ -1,0 +1,106 @@
+
+
+ds2_options scond=WARNING;
+/* Rule Set hello version 1.0 generated on Tue Feb 04 14:33:57 UTC 2025 */
+
+DS2_OPTIONS LOGICALEXPR = STANDARD;
+DS2_OPTIONS SCOND = WARNING;
+DS2_OPTIONS MISSING_NOTE;
+
+/* PACKAGE_START: packageName="hello_hello_1_0", referencedBy=hello, name=hello, nodeId=a4a8b7ca-0cd7-4d39-9d6e-db8fda18c246, objectUri=/businessRules/ruleSets/82a621e6-5fef-4300-9b93-1c2ba439f2c7/revisions/8976bf1e-684e-4b77-a4ea-c71f9e99fed1 */
+  package "hello_hello_1_0"  / inline;
+
+      dcl package logger _logger('App.SASDCM');
+      dcl package logger logr_variableTrace('App.TableServices.DS2.Runtime.TraceVariables');
+
+        /* ---- RULE FIRED FLAG COUNT = 0 ---- */
+            method setruleFiredBasePosition(integer newBasePosition); end;
+            method setDecisionNodeID(varchar newDecisonNodeID); end;
+            method enableRuleFiredRecording(); end;
+            method disableRuleFiredRecording(); end;
+            method initRuleFireHashes(); end;
+            method getRuleFiredFlagCount() returns integer;  return 0; end;
+            method recordRuleFired(
+              in_out char    ruleFiredFlags,
+              in_out integer rulesFiredForRecordCount,
+              char(36)       this_rule_id);
+            end;
+
+        method initRdsp();
+    end;
+
+    method execute( in_out varchar "name",in_out varchar "text");
+
+         text = 'Hello ' ||  name;
+
+      rule_end:  /* label for rule RETURN action */
+    end;
+
+/* PACKAGE_END: "hello_hello_1_0" */
+  endpackage;
+
+DS2_OPTIONS LOGICALEXPR = STANDARD;
+DS2_OPTIONS SCOND = WARNING;
+DS2_OPTIONS MISSING_NOTE;
+
+/* Decision hello version 1.0 generated on Tue Feb 04 14:33:57 UTC 2025 */
+/* {PACKAGE_START} */
+package hello  / inline;
+
+    dcl package logger logr_perf('App.tk.SID.Perf');
+        dcl double timer_start;
+        dcl double elapsed_time;
+        dcl double total_timer_start;
+        dcl double total_elapsed_time;
+        dcl package logger logr_error('App.tk.SID.Error');
+
+    dcl package "hello_hello_1_0" "hello_hello_1_0_hdl"();
+
+     method init();
+
+     end;
+
+    method execute_internal(
+       varchar(64) "name"
+      ,in_out varchar "text"
+
+      ,in_out integer "_filter_"
+
+    );
+        dcl integer dg_filter_;
+
+       dcl integer _sidLogStatus;
+           dcl varchar(3000) _sidLogErrorMsg;
+
+total_timer_start = datetime();
+
+        timer_start = datetime();
+        "hello_hello_1_0_hdl".execute("name", "text");
+
+        elapsed_time = datetime() - timer_start;
+        logr_perf.log( 'd', 'Package Name: hello, Node Name: hello, Node ID: a4a8b7ca-0cd7-4d39-9d6e-db8fda18c246, NODE DURATION: ' .. elapsed_time);
+
+        "end":/*label for decision node link to flow end*/
+
+total_elapsed_time = datetime() - total_timer_start;
+logr_perf.log( 'd', 'Package Name: hello, TOTAL DURATION: ' .. total_elapsed_time);
+
+     end;
+
+    method execute(
+       varchar(64) "name_"
+      ,in_out varchar "text"
+);
+
+      dcl integer _filter_;
+
+      execute_internal(
+          "name_"
+         ,"text"
+      ,"_filter_"
+      );
+
+    end;
+
+    /* {PACKAGE_END} */
+      endpackage;

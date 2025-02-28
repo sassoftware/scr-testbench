@@ -1,0 +1,226 @@
+
+
+package SystemContext /overwrite = yes;
+    dcl int rc;
+    dcl package rediscli _sid_rdsp;
+    method initRediscli() returns package rediscli;
+        if null(_sid_rdsp) then do;
+            _sid_rdsp = _new_ rediscli();
+                                rc = _sid_rdsp.connect('sid-lists');
+        end;
+        return _sid_rdsp;
+    end;
+endpackage;
+
+package Container / overwrite = yes;
+    dcl package SystemContext sysCtxt;
+endpackage;
+
+package GlobalContext / overwrite = yes;
+
+    dcl varchar(1024) ctxtKey;
+    dcl package Container ctxtValue;
+    dcl package hash context();
+
+    method init();
+        context.definekey('ctxtKey');
+        context.definedata('ctxtValue');
+        context.defineDone();
+    end;
+
+    method add(varchar(1024) key, package Container value);
+        ctxtKey = key;
+        ctxtValue = value;
+        context.ref();
+    end;
+
+    method getItemCount(in_out integer count);
+        count = context.num_items;
+    end;
+
+    method find(varchar(1024) key, in_out package Container value);
+        ctxtKey = key;
+        context.find();
+        value = ctxtValue;
+    end;
+
+endpackage;
+
+ds2_options scond=WARNING;
+/* Rule Set car_lookup version 1.0 generated on Sat Dec 07 16:36:57 UTC 2024 */
+
+DS2_OPTIONS LOGICALEXPR = STANDARD;
+DS2_OPTIONS SCOND = WARNING;
+DS2_OPTIONS MISSING_NOTE;
+
+/* PACKAGE_START: packageName="sampleu45redis_car_lookup_1_0", referencedBy=sample-redis, name=car_lookup, nodeId=e9421c56-214d-4574-9bc3-d88efc17cb5c, objectUri=/businessRules/ruleSets/88e1ddb0-a4ca-4910-a9f7-e3001f1a574f/revisions/22c86c7f-568b-4198-a0f1-48f558c2130e */
+  package "sampleu45redis_car_lookup_1_0"  / inline;
+
+dcl package rediscli _sid_rdsp;
+
+    dcl double _redis_datagrid_extended;
+
+      dcl package logger _logger('App.SASDCM');
+      dcl package logger logr_variableTrace('App.TableServices.DS2.Runtime.TraceVariables');
+
+        /* ---- RULE FIRED FLAG COUNT = 0 ---- */
+            method setruleFiredBasePosition(integer newBasePosition); end;
+            method setDecisionNodeID(varchar newDecisonNodeID); end;
+            method enableRuleFiredRecording(); end;
+            method disableRuleFiredRecording(); end;
+            method initRuleFireHashes(); end;
+            method getRuleFiredFlagCount() returns integer;  return 0; end;
+            method recordRuleFired(
+              in_out char    ruleFiredFlags,
+              in_out integer rulesFiredForRecordCount,
+              char(36)       this_rule_id);
+            end;
+
+        method initRdsp();
+    end;
+
+method formatListNumericKey(double x) returns varchar;
+    if missing(x) then do;
+        return '';
+    end;
+    else do;
+        return putn(x, 'BEST24.-L');
+    end;
+end;
+
+    method execute( in_out varchar "name",in_out double "number",in_out varchar "origin", in_out package SystemContext "globalSystemContext");
+
+      dcl double rc;
+      dcl double rc_query;
+      dcl varchar(100000) _redis_key;
+      dcl varchar(10) _row_state;
+      dcl double _row_expiry;
+      dcl varchar(12) _row_expiry_string;
+      dcl varchar(36) "number_string";
+
+"_sid_rdsp" = "globalSystemContext"._sid_rdsp;
+
+         _redis_key = catt('SAS|0|0|LIST|cars|1', '|', "name");
+rc = _sid_rdsp.HGET(_redis_key, '_ldMetadata_state', "_row_state");
+if (rc eq 0 ) then do;
+if (_row_state eq 'deployed') then do;
+rc = _sid_rdsp.HGET(_redis_key, '_ldMetadata_expiry', "_row_expiry_string");
+if (rc eq 0 ) then do;
+_row_expiry=inputn("_row_expiry_string", '24.8') + 315619200;
+if missing(_row_expiry)=1 or datetime() le _row_expiry then do;
+rc = _sid_rdsp.HGET(_redis_key, 'number', "number_string");
+number=inputn("number_string", '24.8');
+rc = _sid_rdsp.HGET(_redis_key, 'origin', "origin");
+end;
+else do;number = .;
+origin = '';
+end;
+end;
+end;
+else do;number = .;
+origin = '';
+end;
+end;
+;
+
+      rule_end:  /* label for rule RETURN action */
+    end;
+
+/* PACKAGE_END: "sampleu45redis_car_lookup_1_0" */
+  endpackage;
+
+DS2_OPTIONS LOGICALEXPR = STANDARD;
+DS2_OPTIONS SCOND = WARNING;
+DS2_OPTIONS MISSING_NOTE;
+
+/* Decision sample-redis version 1.0 generated on Sat Dec 07 16:36:57 UTC 2024 */
+/* {PACKAGE_START} */
+package sample_redis  / inline;
+
+    dcl package GlobalContext context();
+        dcl package Container container;
+        dcl package SystemContext "_sidSysCtxt";
+        dcl package rediscli "_sid_rdsp";
+        dcl package logger logr_perf('App.tk.SID.Perf');
+        dcl double timer_start;
+        dcl double elapsed_time;
+        dcl double total_timer_start;
+        dcl double total_elapsed_time;
+        dcl package logger logr_error('App.tk.SID.Error');
+
+    dcl package "sampleu45redis_car_lookup_1_0" "sampleu45redis_car_lookup_1_0_hdl"();
+
+     method initGlobalContext();
+            dcl package SystemContext sc();
+            dcl package Container c1();
+            c1.sysCtxt = sc;
+            context.init();
+            context.add('System', c1);
+            _sidSysCtxt = sc;
+         end;
+         method initRedisDatagrid();
+             "sampleu45redis_car_lookup_1_0_hdl".initRdsp();
+     end;
+
+     method init();
+             initGlobalContext();
+             initRedisDatagrid();
+
+     end;
+
+    method execute_internal(
+       in_out varchar "name"
+      ,in_out double "number"
+      ,in_out varchar "origin"
+
+      ,in_out integer "_filter_"
+
+    );
+        dcl integer dg_filter_;
+
+       dcl integer _sidLogStatus;
+           dcl varchar(3000) _sidLogErrorMsg;
+
+        context.find('System', container);
+            "_sidSysCtxt" = container.sysCtxt;
+            if null("_sid_rdsp") then do;
+                "_sid_rdsp" = "_sidSysCtxt".initRedisCli();
+            end;
+
+total_timer_start = datetime();
+
+        timer_start = datetime();
+        "sampleu45redis_car_lookup_1_0_hdl".execute("name", "number", "origin", "_sidSysCtxt");
+
+        elapsed_time = datetime() - timer_start;
+        logr_perf.log( 'd', 'Package Name: sample_redis, Node Name: car_lookup, Node ID: e9421c56-214d-4574-9bc3-d88efc17cb5c, NODE DURATION: ' .. elapsed_time);
+
+        "end":/*label for decision node link to flow end*/
+
+total_elapsed_time = datetime() - total_timer_start;
+logr_perf.log( 'd', 'Package Name: sample_redis, TOTAL DURATION: ' .. total_elapsed_time);
+
+     end;
+
+    method execute(
+       varchar(32) "name_"
+      ,in_out varchar "name"
+      ,in_out double "number"
+      ,in_out varchar "origin"
+);
+
+      dcl integer _filter_;
+
+      "name" = "name_";
+
+      execute_internal(
+          "name"
+         ,"number"
+         ,"origin"
+      ,"_filter_"
+      );
+
+    end;
+
+    /* {PACKAGE_END} */
+      endpackage;

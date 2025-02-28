@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "9d72e0e4-c4b3-4b8a-9f91-0983e8e605ab",
+		"name": "localhost",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1717968"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8081/scr-solo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"name\": \"world\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/scr-solo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"scr-solo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8082/scr-redis",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"name\": \"vw\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/scr-redis",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"scr-redis"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8083/scr-oracle",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"name\": \"Mary\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/scr-oracle",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"scr-oracle"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

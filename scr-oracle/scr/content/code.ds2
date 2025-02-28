@@ -1,0 +1,130 @@
+
+
+ds2_options scond=WARNING;
+/* Custom Object oracle_select retrieved on Sat Dec 07 16:35:46 UTC 2024 */ 
+
+/* PACKAGE_START: packageName="sampleu45oracle_oracle_select_1_0", referencedBy=sample-oracle, name=oracle_select, nodeId=a7068d01-a7ba-483a-8b2c-ef93cc995961, objectUri=/decisions/codeFiles/ba5bf4ff-cbd9-4832-b4c2-9ca73a03f32f/revisions/e75c33d3-3ab5-46dd-a44c-f3c12fe47165 */
+package "sampleu45oracle_oracle_select_1_0" /inline;
+    dcl integer "_rc";
+    dcl package sqlstmt _stmt;
+
+    method execute(
+            in_out varchar "NAME", 
+
+            in_out double "HEIGHT", 
+
+            in_out double "rowCount", 
+
+            in_out double "returnCode"
+
+    );
+
+        if missing(_stmt) then _stmt = _new_ sqlstmt('  SELECT HEIGHT AS HEIGHT FROM CLASS WHERE NAME = ?  ');
+
+        _stmt.setVarchar(1, "NAME");
+
+        "_rc" = _stmt.execute();
+        if ("_rc" = 1) then do;
+            _stmt = _new_ sqlstmt('  SELECT HEIGHT AS HEIGHT FROM CLASS WHERE NAME = ?  ');
+
+            _stmt.setVarchar(1, "NAME");
+
+            "_rc" = _stmt.execute();
+        end;
+
+        "returnCode" = "_rc";
+        if ("_rc") then do;
+            put 'ERROR: Error executing';
+            return;
+        end;
+
+        "_rc" = _stmt.fetch();
+        if("_rc" = 0) then do;
+                "HEIGHT" =  _stmt.getDouble(1);
+
+                "rowCount" = 1;
+                "_rc" = _stmt.closeResults();
+                if ("_rc") then do;
+                    put 'ERROR: Error closing results';
+                    return;
+                end;
+
+        end;
+    end;
+/* PACKAGE_END: "sampleu45oracle_oracle_select_1_0" */
+endpackage;
+
+DS2_OPTIONS LOGICALEXPR = STANDARD;
+DS2_OPTIONS SCOND = WARNING;
+DS2_OPTIONS MISSING_NOTE;
+
+/* Decision sample-oracle version 1.0 generated on Sat Dec 07 16:35:46 UTC 2024 */
+/* {PACKAGE_START} */
+package sample_oracle  / inline;
+
+    dcl package logger logr_perf('App.tk.SID.Perf');
+        dcl double timer_start;
+        dcl double elapsed_time;
+        dcl double total_timer_start;
+        dcl double total_elapsed_time;
+        dcl package logger logr_error('App.tk.SID.Error');
+
+    dcl package "sampleu45oracle_oracle_select_1_0" "sampleu45oracle_oracle_select_1_0_hdl"();
+
+     method init();
+
+     end;
+
+    method execute_internal(
+       in_out varchar "NAME"
+      ,in_out double "HEIGHT"
+      ,in_out double "returnCode"
+      ,in_out double "rowCount"
+
+      ,in_out integer "_filter_"
+
+    );
+        dcl integer dg_filter_;
+
+       dcl integer _sidLogStatus;
+           dcl varchar(3000) _sidLogErrorMsg;
+
+total_timer_start = datetime();
+
+        timer_start = datetime();
+        "sampleu45oracle_oracle_select_1_0_hdl".execute("NAME", "HEIGHT", "rowCount", "returnCode");
+
+        elapsed_time = datetime() - timer_start;
+        logr_perf.log( 'd', 'Package Name: sample_oracle, Node Name: oracle_select, Node ID: a7068d01-a7ba-483a-8b2c-ef93cc995961, NODE DURATION: ' .. elapsed_time);
+
+        "end":/*label for decision node link to flow end*/
+
+total_elapsed_time = datetime() - total_timer_start;
+logr_perf.log( 'd', 'Package Name: sample_oracle, TOTAL DURATION: ' .. total_elapsed_time);
+
+     end;
+
+    method execute(
+       varchar(32) "NAME_"
+      ,in_out double "HEIGHT"
+      ,in_out varchar "NAME"
+      ,in_out double "returnCode"
+      ,in_out double "rowCount"
+);
+
+      dcl integer _filter_;
+
+      "NAME" = "NAME_";
+
+      execute_internal(
+          "NAME"
+         ,"HEIGHT"
+         ,"returnCode"
+         ,"rowCount"
+      ,"_filter_"
+      );
+
+    end;
+
+    /* {PACKAGE_END} */
+      endpackage;

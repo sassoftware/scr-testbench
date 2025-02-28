@@ -1,0 +1,18 @@
+services:
+  redis:
+    build: ./redis
+    container_name: redis
+    ports:
+      - 6379:6379
+      - 8001:8001
+  scr:
+    build: ./scr  
+    container_name: scr-redis
+    ports:
+      - 8082:8080
+    environment:
+      - SAS_SCR_LOG_LEVEL_SCR_CONFIG=TRACE
+      - SAS_SCR_LOG_LEVEL_SCR_MODULE_LOGGER=TRACE
+      - SAS_SCR_LOG_LEVEL_App=TRACE
+      - SAS_SCR_LOG_LEVEL_Audit=TRACE
+      - SAS_SCR_PASS_HEADERS=True

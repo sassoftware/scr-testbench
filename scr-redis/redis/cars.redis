@@ -1,0 +1,6 @@
+HSET "SAS|0|0|LIST|cars|1|volvo" _ldMetadata_state "deployed" number "1" origin "Sweden"
+HSET "SAS|0|0|LIST|cars|1|kia"   _ldMetadata_state "deployed" number "2" origin "Korea"
+HSET "SAS|0|0|LIST|cars|1|vw"    _ldMetadata_state "deployed" number "3" origin "Germany"
+HSET "SAS|0|0|LIST|cars|1|fiat"  _ldMetadata_state "deployed" number "4" origin "Italy"
+HSET "SAS|0|0|LIST|cars|1|tesla" _ldMetadata_state "deployed" number "5" origin "US"
+HSET "SAS|0|0|LIST|cars|1|audi"  _ldMetadata_state "deployed" number "6" origin "Germany"

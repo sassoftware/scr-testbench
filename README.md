@@ -102,7 +102,7 @@ $ curl -k http://localhost:8083/scr-oracle --header 'Content-Type: application/j
 {"metadata":{"module_id":"sample_oracle","elapsed_nanos":3936668,"step_id":"execute","timestamp":"2024-12-08T14:34:49.068232085Z"},"data":{"returnCode":0.0,"rowCount":1.0,"HEIGHT":102.13,"NAME":"Paul"},"version":1}
 ```
 
-Or use the included [postman collection](localhost.postman_collection.json). E.g.:
+Or use the included [postman collection](assets/localhost.postman_collection.json). E.g.:
 
 
 ![](img/postman.png)
